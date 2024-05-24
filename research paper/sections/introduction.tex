@@ -1,19 +1,31 @@
 \section{Introduction}
+The invention of the transformer architecture led to the rise of various language models. One of the challenges the researchers have encountered with such models is the speed of autoregressive inference. Optimizing the inference is important whether aiming to provide a good user experience in real-time applications, saving on computational costs when running the model, or allowing running the model in an environment with limited computational and memory resources. 
+
+In particular, memory bandwidth is a significant limitation in modern highly parallelizable hardware \cite{pope_efficiently_2022}\cite{shazeer_fast_2019}\cite{williams_roofline_2009}. In incremental decoding, most of the bandwidth is consumed by the constant loading of large key and value tensors \cite{shazeer_fast_2019}. To address this issue, Multi-Query Attention (MQA) architecture was proposed and was shown to increase the inference speed significantly \cite{shazeer_fast_2019}. To better address the quality decline that MQA induces, Grouped-Query Attention (GQA) was proposed as an interpolation between the standard Multi-Head Attention (MHA) and MQA \cite{ainslie_gqa_2023}.
+
+While Ainslie et al. \cite{ainslie_gqa_2023} present the performance and speed results for a different number of query groups, the models used in the experiments were pre-existing and then further trained. This research seeks to search for an optimal number of query groups at the pre-training stage to utilize the full potential of GQA. Moreover, the experiments conducted in this study are focused on decoder-only models. 
+
+Besides, we are testing an orthogonal approach to reducing the size of key and value tensors, namely - by shrinking the dimensionality of key/query, and value vectors while keeping the number of attention heads the same to see the direct effect of their dimensionality on speed and quality. Even though Shazeer \cite{shazeer_fast_2019} has introduced this idea, the results have not revealed distinct results for each of the selected dimensionalities as they were used with different correlated numbers of attention heads, while the speed measurements for this aspect were omitted fully. 
+
+Hence, in this study, we first try to find an optimal dimensionality for key/query and value vectors while keeping the number of attention heads the same, then with the chosen dimensionality we run GQA experiments with different numbers of groups. In addition, once the optimal number of groups is determined, we investigate whether the quality and speed ratio relative to the baseline is preserved when adjusting the number of attention heads while keeping the proportion of groups towards the total number of heads constant.  
+
 \begin{itemize}
-\item Introduce the topic and explain why it is important (motivation!). %\emph{How should a scientific paper look like?}
-
-\item Relate to the most relevant existing work from the literature (use BibTeX), explain their contributions, and (critically) indicate what is still unanswered. 
-%\emph{The existing state of the art describes the setup of general scientific papers, e.g.\ see~\cite{hengl2002rules}, but this may be different for computer science papers.}
-
-\item Explain what the research questions for this work are. 
-This usually is a subset of the unanswered questions. %\emph{The aim of this work is therefore to provide a good template specifically for papers in the field of computer science.}
-
-\item Summarize the main contributions/conclusions of this research.
-NB: Make sure the title of the paper is a good match to the main research question / contribution / conclusion.
-
-\item Briefly indicate how the rest of the paper fits together to answer the research question(s).
+    \item Main findings and how they contribute, and mention again that the goal is to find optimal trade-offs between speed and quality.
 \end{itemize}
 
-For a longer research paper, a section with a more elaborate discussion of the literature may follow, but for short (conference) submissions, this is often included in the introduction.
+% \begin{itemize}
+% \item Relate to the most relevant existing work from the literature (use BibTeX), explain their contributions, and (critically) indicate what is still unanswered. 
+% %\emph{The existing state of the art describes the setup of general scientific papers, e.g.\ see~\cite{hengl2002rules}, but this may be different for computer science papers.}
 
-Make sure the introduction and conclusion are easily understandable by everyone with a computer science bachelor (e.g.\ your examiner may have a completely different expertise).
+% \item Explain what the research questions for this work are. 
+% This usually is a subset of the unanswered questions. %\emph{The aim of this work is therefore to provide a good template specifically for papers in the field of computer science.}
+
+% \item Summarize the main contributions/conclusions of this research.
+% NB: Make sure the title of the paper is a good match to the main research question / contribution / conclusion.
+
+% \item Briefly indicate how the rest of the paper fits together to answer the research question(s).
+% \end{itemize}
+
+% For a longer research paper, a section with a more elaborate discussion of the literature may follow, but for short (conference) submissions, this is often included in the introduction.
+
+% Make sure the introduction and conclusion are easily understandable by everyone with a computer science bachelor (e.g.\ your examiner may have a completely different expertise).
