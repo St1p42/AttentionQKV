@@ -4,20 +4,29 @@
 % Do not forget to give this section another name, for example after the method or idea you are presenting.
 
 % Some more detailed suggestions for typical types of contributions in computer science are described in the following subsections.
-
+\subsection{Dataset}
 Over time, transformer models have been scaled to enormous sizes with hundreds of billions of parameters with the goal of improving performance. This made the models less sustainable and more expensive both to train and operate due to the computational requirements induced by the scaling. 
 
-For this reason, the experiments in this study are conducted on much smaller models trained on the TinyStories dataset. The dataset was specifically designed to facilitate the trained models' sample efficiency by being more cohesive and suitable for learning English grammar and vocabulary \cite{eldan_tinystories_2023}. The same study has shown that smaller models with fewer parameters, if are sample-efficient, can preserve the ability to generate coherent, diverse, and consistent results demonstrating some reasoning capabilities. 
+For this reason, the experiments in this study were conducted on much smaller models (namely, variations of GPT-Neo\footnote{\href{https://github.com/EleutherAI/gpt-neo}{GPT-Neo Repository}}) trained on the TinyStories dataset. The dataset was specifically designed to facilitate the trained models' sample efficiency by being more cohesive and suitable for learning English grammar and vocabulary \cite{eldan_tinystories_2023}. The same study has shown that smaller models with fewer parameters, if sample-efficient, can preserve the ability to generate coherent, diverse, and consistent results demonstrating some reasoning capabilities. Moreover, these models can serve as an ideal tool for testing various architectural decisions, as their properties often carry over to larger-scale versions \cite{eldan_tinystories_2023}. 
 
-\begin{itemize}
-    \item Mention again using a decoder-only model (which is GPT-Neo)
-    \item Add a nice figure of the workflow of experiments (kqv size - GQA - Different number of attention heads)
-    \item Explain (briefly) why reducing the kqv vector size should help
-    \item Explain that GQA was adjusted a bit given a small number of attention heads (not equal group sizes)
-    \item Mention that we widen FFN to compensate for having less parameters \cite{shazeer_fast_2019}
-    \item Inroduce a math formula to adjust FFN based on the KQV factor and number of query groups
-    \item Explain how ratios of groups to the total number of heads work across different numbers of heads.
-\end{itemize}
+\subsection{Translating Results to Larger Models}
+Although the changes in model quality based on various decisions can potentially be translated to larger models, the changes in inference speed are not guaranteed to be accurately reflected. That is because given the small size of the models, the KV cache size could potentially be less of a bottleneck given naturally smaller context window lengths and sizes of keys and values. To compensate for this, the cache size was artificially inflated by selecting a large batch size to process many inputs simultaneously. 
+
+\subsection{Widening the FFN}
+Both reducing the size of key and value vectors and using GQA is equivalent to decreasing the size of transformation matrices (e.g. the one depicted in \textit{Figure \ref{fig:obtaining_key}}) alongside the vertical axis. This implies that applying these techniques will diminish the number of learnable parameters. As the final goal is to increase the inference speed by preserving the models' quality, to compensate for this parameter loss and improve the quality without sacrificing too much speed, the FFN of the transformers was widened similarly to experiments conducted by Shazeer \cite{shazeer_fast_2019} to have the same number of parameters as in the baseline. That is because ... \\
+\textbf{Explanation and math formula (equations) for widening the FFN are in the making...}
+
+% \subsection{Adjusting GQA for Fewer Attention Heads}
+% \begin{itemize}
+%     \item Mention again using a decoder-only model (which is GPT-Neo)
+%     \item Add a nice figure of the workflow of experiments (kqv size - GQA - Different number of attention heads)
+%     \item Mention that we use a large number of batches to actually hit the memory bottleneck and compensate for the model's being small
+%     \item For each option from the background say that it's equivalent to changing the transformation matrix from Figure 1.
+%     \item Explain that GQA was adjusted a bit given a small number of attention heads (not equal group sizes)
+%     \item Mention that we widen FFN to compensate for having fewer parameters \cite{shazeer_fast_2019}
+%     \item Inroduce a math formula to adjust FFN based on the KQV factor and number of query groups
+%     \item Explain how ratios of groups to the total number of heads work across different numbers of heads (how we keep the same ratio across different numbers of attention heads)
+% \end{itemize}
 
 
 
@@ -27,18 +36,4 @@ For this reason, the experiments in this study are conducted on much smaller mod
 
 % \textit{Introduce the time complexity analysis and how the memory affects it. Also, mention that we are testing at the pre-training stage. And, mention why it could be beneficial to have it done at the pre-training stage. Maybe also mention the changing number of attention heads as a gap from the previous research.}
 
-
-\subsection*{Experimental work}
-In this case, this section will mostly contain a description of the methods/algorithms you will be comparing. Although not all methods need to be described in detail (providing appropriate references are available), make sure that you reveal sufficient details to a reader not familiar with these methods to: a) obtain a high-level understanding of the method and differences between them, and b) understand your explanation of the results/conclusions.
-
-\subsection*{Improvement of an idea}
-In this case, you would need to explain in detail how the improvement works. If it is based on some observation that can be proven, this is a good place to provide that proof (e.g., of the correctness of your approach). 
-
-\subsection*{Literature survey}
-If your contribution is a literature survey, then the organization of these ``middle'' sections very much depends on the way you want to present/organize the literature you are discussing.
-First try to cluster papers that are similar in some aspect. Then think of how these clusters are related, from that you can think of a good order to discuss these clusters; this is sometimes called a bottom-up approach to writing a paper.
-
-In addition, you may try to think about the organization of the literature from a top-down perspective: try to ``take a step back'' and think about the field and what important questions/variants are and build a hierarchical categorization of the field.
-
-Make clear what your contribution is here: a new organization of the literature, identification of open problems/challenges, new parallels/generalizations, a table with pros/cons of different methods, etc.\ 
 
